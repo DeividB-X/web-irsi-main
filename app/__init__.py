@@ -91,3 +91,6 @@ def create_app(config_name=None):
 
         app.logger.addHandler(file_handler)
         app.logger.setLevel(logging.INFO)
+
+    return app
+
