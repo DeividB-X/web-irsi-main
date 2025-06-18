@@ -1,23 +1,18 @@
-# Usa una imagen oficial de Python
+# Usa una imagen oficial de Python como base
 FROM python:3.11-slim
 
-# Establece el directorio de trabajo dentro del contenedor
+# Establece el directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copia los archivos del proyecto al contenedor
+# Copia los archivos de requerimientos e instálalos
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia el resto del código fuente al contenedor
 COPY . .
 
-# Instala dependencias del sistema necesarias para psycopg2 y pyodbc
-RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    build-essential \
-    libpq-dev \
-    unixodbc-dev \
-    && pip install --no-cache-dir -r requirements.txt
-
-# Expone el puerto que usará Flask (Render usa por defecto el 10000, pero 0.0.0.0:PORT es lo importante)
+# Expone el puerto que Render espera
 EXPOSE 10000
 
-# Comando para ejecutar la app
-CMD ["python", "run.py"]
+# Comando para ejecutar la app con Gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:10000", "run:app"]
