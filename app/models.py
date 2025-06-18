@@ -5,10 +5,11 @@ import bleach
 
 class Usuario(UserMixin, db.Model):
     __tablename__ = 'Usuarios'
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(50), nullable=False)
+    role = db.Column(db.String(50), nullable=False)  # admin, director, consulta
     two_factor_code = db.Column(db.String(6))
     two_factor_expiry = db.Column(db.DateTime)
 
@@ -24,8 +25,12 @@ class Usuario(UserMixin, db.Model):
             self.password_hash.encode('utf-8')
         )
 
+    def __repr__(self):
+        return f"<Usuario {self.username}>"
+
 class Estudiante(db.Model):
     __tablename__ = 'Estudiantes'
+
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(255), nullable=False)
     apellidos = db.Column(db.String(255), nullable=False)
@@ -38,3 +43,6 @@ class Estudiante(db.Model):
     correo = db.Column(db.String(255), nullable=False)
     telefono = db.Column(db.String(20))
     anio_solicitud = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"<Estudiante {self.nombre} {self.apellidos}>"
