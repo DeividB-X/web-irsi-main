@@ -12,7 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expone el puerto que Render espera
-EXPOSE 10000
+EXPOSE 5000
 
 # Comando para ejecutar la app con Gunicorn
-CMD ["gunicorn", "-b", "0.0.0.0:10000", "run:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "run:app"]
+

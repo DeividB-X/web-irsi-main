@@ -30,12 +30,12 @@ def create_app(config_name=None):
             MAIL_SUPPRESS_SEND=True  # Para pruebas con mail
         )
     else:
-        app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-        app.config['MAIL_PORT'] = os.getenv('MAIL_PORT')
+        app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
+        app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
         app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True') == 'True'
         app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
         app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-        app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+        app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'clave-secreta-en-desarrollo')
         app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -57,7 +57,7 @@ def create_app(config_name=None):
                 'style-src': "'self' https://cdn.jsdelivr.net",   
                 'font-src': "'self' https://cdn.jsdelivr.net"   
             }
-            talisman.init_app(app, content_security_policy=csp)  # Usamos la instancia global
+            talisman.init_app(app, content_security_policy=csp)
 
     # Importar modelos después de inicializar db
     from app.models import Usuario
@@ -91,6 +91,3 @@ def create_app(config_name=None):
 
         app.logger.addHandler(file_handler)
         app.logger.setLevel(logging.INFO)
-        app.logger.info('App iniciada')
-
-    return app
